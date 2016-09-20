@@ -1,19 +1,35 @@
-/* ---- Tipos : Jogador (trainer) e Pokémon */
+/* ---- TADs - Listas */
+// Jogador (Trainer)
 typedef struct trainer {
+    int chave;
     int tPokeballs;
     int tPokedex; // fazer uma lista (pokémon, cp)
     int sumScore;
 } tTrainer;
 
-//fazer lista de jogadores
+typedef struct celula *pTrainer;
+typedef struct celula {
+    tTrainer treinador;
+    pTrainer prox;
+} tCelula;
 
-/* ---- Listas : Posições (mapa) */
+typedef struct trainerlista {
+    pTrainer primeiro, ultimo;
+} lTrainer;
+//.
+
+// Posicao no Mapa
 typedef struct pos {
-    int x;
-    int y;
+    int x; //linha
+    int y; //coluna
 } lPos;
+//.
 
-/* ---- Cabeçalho de Funções */
+/* ---- Cabecalho de Funcoes */
+// Funções de Listas
+void criaLista(lTrainer *lista);
+
+// Funcoes de Jogo
 void explore();
 void walk();
 void walkedPath();

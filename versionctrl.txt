@@ -1,0 +1,10 @@
+===== 20/09/2016 =====
+/Biblioteca.h
+- TAD & Lista : Jogador, Posicoes
+-
+
+/main.c
+- Leitura do arquivo de entrada
+
+/Funcoes.c
+- Lista Vazia : Jogadores

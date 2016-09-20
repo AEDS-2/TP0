@@ -6,7 +6,7 @@
 int main () {
     FILE *entrada = fopen("ent.txt", "r");
     int tam, i, j, numPlayers, tmp;
-    fscanf(entrada, "%d\n", &tam);
+    fscanf(entrada, "%d\n", &tam); //le primeiro item do arquivo = tamanho do mapa
 
     // Coleta de dados do arquivo : matriz/mapa, jogadores
     int map[tam][tam];
