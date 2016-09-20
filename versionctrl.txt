@@ -5,6 +5,7 @@
 
 /main.c
 - Leitura do arquivo de entrada
+- Base de desenho da interface do mapa
 
 /Funcoes.c
 - criaListaTrainer : Cria Lista de jogadores
