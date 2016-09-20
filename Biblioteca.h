@@ -5,6 +5,7 @@ typedef struct trainer {
     int tPokeballs;
     int tPokedex; // fazer uma lista (pokémon, cp)
     int sumScore;
+    int caminho; // lista de posicoes
 } tTrainer;
 
 typedef struct celula *pTrainer;
@@ -18,7 +19,7 @@ typedef struct trainerlista {
 } lTrainer;
 //.
 
-// Posicao no Mapa
+// Posicao no Mapa - util para sumScore do jogador e para retornar caminho feito pelo jogador
 typedef struct pos {
     int x; //linha
     int y; //coluna
