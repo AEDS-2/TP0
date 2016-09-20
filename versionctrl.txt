@@ -1,7 +1,7 @@
 ===== 20/09/2016 =====
 /Biblioteca.h
 - TAD & Lista : Jogador, Posicoes
-- Cabe√ßalhos de Funcoes : cria e insere (lista)
+- Cabecalhos de Funcoes : cria e insere (lista)
 
 /main.c
 - Leitura do arquivo de entrada
@@ -11,3 +11,4 @@
 - criaListaTrainer : Cria Lista de jogadores
 - insereTrainer : insere novo jogador
     ^ obs: funcoes simplesmente copiadas do slide, ainda n√£o foram arrumadas
+- rascunho do programa em portugues (comentè´°rio)

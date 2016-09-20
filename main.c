@@ -21,10 +21,22 @@ int main () {
     }
     // .
 
-
-
-
-
+    /*
+        entra no loop do jogo
+        exibe nome do jogador atual
+        entra no loop de um jogador
+        olha posicoes por perto
+        anda (se posivel)
+        desenha na tela
+        ação (se houver)
+        escreve ação na tela
+        sleep(1)
+        clear
+        se fim de mapa, exibe pontuação do jogador, pokemons, recomeça loop de jogador
+        se não fim de mapa, então continua loop do jogador
+        se fim de jogo, clear, exibe ganhadores, (exibe animação de vitória?)
+        se não fim de jogo, continua loop de jogo
+    */
 
     //do {
         for(i=0;i<=tam;i++) {
