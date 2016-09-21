@@ -10,5 +10,13 @@
 /Funcoes.c
 - criaListaTrainer : Cria Lista de jogadores
 - insereTrainer : insere novo jogador
-    ^ obs: funcoes simplesmente copiadas do slide, ainda n√£o foram arrumadas
-- rascunho do programa em portugues (comentè´°rio)
+    ^ obs: funcoes simplesmente copiadas do slide, ainda nao foram arrumadas
+- rascunho do programa em portugues (comentario)
+
+==== 21/09/2016 ==== commit name: version.21
+/Bibliotca.h
+- acrescimo dos campos name, x e y ao TAD trainer
+
+/main.c
+- tentativa de ler arquivo e passar pra um tipo Trainer tempor√°rio, para depois (ainda n√£o foi feito) acrescentar na lista
+- comentarios explicativos na implementacao do desenho (tava MUITO confuso)

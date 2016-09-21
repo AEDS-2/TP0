@@ -5,8 +5,12 @@
 
 int main () {
     FILE *entrada = fopen("ent.txt", "r");
-    int tam, i, j, numPlayers, tmp;
+    int tam, i, j, dLoop, m = 0, n = 0; // variaveis do loop de desenho
+    int numPlayers;
     fscanf(entrada, "%d\n", &tam); //le primeiro item do arquivo = tamanho do mapa
+    tTrainer tmpTrainer; //cria trainer temporário pra passagem pra lista
+
+    //* TODO: olhar leitura de arquivo nos tps do semestre passado
 
     // Coleta de dados do arquivo : matriz/mapa, jogadores
     int map[tam][tam];
@@ -17,7 +21,11 @@ int main () {
     }
     fscanf(entrada, "%d ", &numPlayers);
     for (i = 0; i < numPlayers; i++) {
-        //Fazer lista de trainers
+        tmpTrainer.chave = i;
+        tmpTrainer.tPokeballs = 3;
+        fscanf(entrada, "%s:", &tmpTrainer.name);
+        fscanf(entrada, "%d,", &tmpTrainer.x);
+        fscanf(entrada, "%d", &tmpTrainer.y);
     }
     // .
 
@@ -39,29 +47,32 @@ int main () {
     */
 
     //do {
-        for(i=0;i<=tam;i++) {
-            printf("\n+");
-            j=0;
-            while (j<tam) {
-                printf("===+");
-                j++;
-            }
-            if (i<tam) {
-                printf("\n|");
-                j=0;
-                while (j<tam) {
-                    fscanf(entrada, "%d ", &tmp);
+    for(dLoop = 0; dLoop <= tam; dLoop++) { // loop que controla o numero de vezes que as linhas "+===+" e "| elemento |" serão desenhadas
+        printf("\n+"); // primeiro simbolo da linha de "+===+"
+        i = 0; // zera i para novo loop
+        m++; // vai pra proxima linha da matriz do mapa
+        while (i < tam) { // desenha a quantidade de necessaria de "+===+" em cada linha (se tam = 3, desenha 3 vezes, uma linha só)
+            printf("===+");
+            i++;
+        }
+        printf("\n|"); // primeiro simobolo da linha de "| elemento |"
+        j = 0; // zera j para novo loop
+        while (j < tam) { //desenha a quantidade de "| elemento |" em cada linha
+            printf(" %d |", map[m][n]);
+            n++;
+            j++;
+        }
+    }
+    printf("\n"); // coloquei só porque por algum motivo que DEUS sabe, tava desconfigurando o desenho
+    sleep(1);
+    system("clear");
+                    /*
                     if (tmp < 0) printf(" x |");
                     else if (tmp == 6) printf(" P |");
                     else printf(" %d |", tmp);
                     j++;
-                }
-            }
-        }
-        printf("\n");
-        sleep(1);
-        system("clear");
-    //} while (1 != 0);
+                    */
+//        printf("%s: %d, %d\nPokeballs: %d", tmpTrainer.name, tmpTrainer.x, tmpTrainer.y, tmpTrainer.tPokeballs);
 
     return 0;
 }
