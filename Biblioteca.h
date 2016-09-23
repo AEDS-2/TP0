@@ -33,7 +33,7 @@ typedef struct pos {
 // Funcoes de Listas
 void criaListaTrainer(lTrainer *lista);
 void insereTrainer(tTrainer x, lTrainer *lista);
-
+void Imprime(lTrainer lista);
 // Funcoes de Jogo
 void explore();
 void walk();

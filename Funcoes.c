@@ -19,6 +19,15 @@ void insereTrainer(tTrainer x, lTrainer *lista) {
 }
 //.
 
+void Imprime(lTrainer lista) {
+ pTrainer p;
+ p = lista.primeiro->prox;
+ while (p != NULL) {
+ printf("%d\n", p->treinador.chave);
+ p = p->prox;
+ }
+}
+
 void explore();
 void walk();
 void walkedPath();

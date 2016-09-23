@@ -24,3 +24,7 @@
 ==== 22/09/2016 ==== commit name: version.22 // commit dado no dia 23/09
 /main.c
 - exibicao do mapa rearranjada (problema nos contadores m e n para enquadramento)
+
+==== 23/09/2016 ==== commit name: version.23
+/Biblioteca.h /Funcoes.h /main.c
+- tentativa de usar as funcoes dos slides; se não for feita nova tentativa, voltar para commit anterior

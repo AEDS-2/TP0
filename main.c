@@ -8,7 +8,10 @@ int main () {
     int tam, i, j, dLoop, m = 0, n = 0; // variaveis do loop de desenho
     int numPlayers;
     fscanf(entrada, "%d\n", &tam); //le primeiro item do arquivo = tamanho do mapa
-    tTrainer tmpTrainer; //cria trainer temporário pra passagem pra lista
+    //cria trainer temporário pra passagem pra lista
+    tTrainer tmpTrainer;
+    lTrainer *listaTrainer;
+    criaListaTrainer(listaTrainer);
 
     // Coleta de dados do arquivo : matriz/mapa, jogadores
     int map[tam][tam];
@@ -24,8 +27,13 @@ int main () {
         fscanf(entrada, "%s:", &tmpTrainer.name);
         fscanf(entrada, "%d,", &tmpTrainer.x);
         fscanf(entrada, "%d", &tmpTrainer.y);
+        insereTrainer(tmpTrainer, listaTrainer);
     }
     // .
+    Imprime(*listaTrainer);
+    sleep(5);
+    system("clear");
+
 
     /*
         entra no loop do jogo

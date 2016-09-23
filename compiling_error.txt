@@ -1,0 +1,6 @@
+/tmp/cc2TB6N8.o: na função `main':
+main.c:(.text+0x7f): referência indefinida para `criaListaTrainer'
+main.c:(.text+0x2e3): referência indefinida para `insereTrainer'
+main.c:(.text+0x30c): referência indefinida para `criaListaTrainer'
+main.c:(.text+0x322): referência indefinida para `Imprime'
+collect2: error: ld returned 1 exit status
