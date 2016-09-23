@@ -18,5 +18,9 @@
 - acrescimo dos campos name, x e y ao TAD trainer
 
 /main.c
-- tentativa de ler arquivo e passar pra um tipo Trainer temporário, para depois (ainda não foi feito) acrescentar na lista
+- tentativa de ler arquivo e passar pra um tipo Trainer temporario, para depois (ainda nao foi feito) acrescentar na lista
 - comentarios explicativos na implementacao do desenho (tava MUITO confuso)
+
+==== 22/09/2016 ==== commit name: version.22
+/main.c
+- exibicao do mapa rearranjada (problema nos contadores m e n para enquadramento)
