@@ -4,7 +4,7 @@ typedef struct trainer {
     int chave;
     int tPokeballs;
     int tPokedex; // fazer uma lista (pokemon, cp)
-    char name;
+    char name[10];
     int x;
     int y;
     int sumScore;

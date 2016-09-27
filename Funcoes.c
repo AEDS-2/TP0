@@ -23,7 +23,7 @@ void Imprime(lTrainer lista) {
  pTrainer p;
  p = lista.primeiro->prox;
  while (p != NULL) {
- printf("%d\n", p->treinador.chave);
+ printf("%d: %s [%d, %d]\n", p->treinador.chave, p->treinador.name, p->treinador.x, p->treinador.y);
  p = p->prox;
  }
 }

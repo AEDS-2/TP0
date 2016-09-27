@@ -28,3 +28,13 @@
 ==== 23/09/2016 ==== commit name: version.23
 /Biblioteca.h /Funcoes.h /main.c
 - tentativa de usar as funcoes dos slides; se nÃ£o for feita nova tentativa, voltar para commit anterior
+
+==== 27/09/2016 ==== commit name: version.27
+* geral
+- resolvido problema de "refer«´ncia indefinida" (compila«®«ªo deve ser feita pelo terminal, n«ªo pelo compilador interno do Atom)
+
+/Biblioteca.h
+- resolvido problema de char no nome do treinador (foi esquecido de colocar o tamanho do char)
+
+/main.c
+- leitura correta do char de nome do treinador (ao inv«±s de pegar "nome:", pega somente "nome")

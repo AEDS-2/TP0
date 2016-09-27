@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include "Biblioteca.h"
 
@@ -7,10 +8,11 @@ int main () {
     FILE *entrada = fopen("ent.txt", "r");
     int tam, i, j, dLoop, m = 0, n = 0; // variaveis do loop de desenho
     int numPlayers;
+    char token[10];
     fscanf(entrada, "%d\n", &tam); //le primeiro item do arquivo = tamanho do mapa
     //cria trainer temporário pra passagem pra lista
     tTrainer tmpTrainer;
-    lTrainer *listaTrainer;
+    lTrainer *listaTrainer = (lTrainer *) malloc(sizeof(lTrainer));
     criaListaTrainer(listaTrainer);
 
     // Coleta de dados do arquivo : matriz/mapa, jogadores
@@ -24,7 +26,8 @@ int main () {
     for (i = 0; i < numPlayers; i++) {
         tmpTrainer.chave = i;
         tmpTrainer.tPokeballs = 3;
-        fscanf(entrada, "%s:", &tmpTrainer.name);
+        fscanf(entrada, "%s: ", token);
+        strcpy(tmpTrainer.name, strtok(token, ":"));
         fscanf(entrada, "%d,", &tmpTrainer.x);
         fscanf(entrada, "%d", &tmpTrainer.y);
         insereTrainer(tmpTrainer, listaTrainer);
