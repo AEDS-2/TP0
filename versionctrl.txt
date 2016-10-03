@@ -38,3 +38,10 @@
 
 /main.c
 - leitura correta do char de nome do treinador (ao inv«±s de pegar "nome:", pega somente "nome")
+
+==== 01/10/2016 ==== commit name: version.01.3 // commit dado no dia 03/10
+/Biblioteca.h & /Funcoes.c & main.c
+- cria«®«ªo e implementa«®«ªo do fun«®«ªo de impress«ªo do nome do jogador no inicio da partida
+
+/Biblioteca.h
+- cria«®«ªo da lista de posi«®«Øes
