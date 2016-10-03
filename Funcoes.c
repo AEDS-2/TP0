@@ -20,8 +20,8 @@ void insereTrainer(tTrainer x, lTrainer *lista) {
 }
 // .
 
-/* ---- Fun??es de Jogo */
-// Imprime nome e informações do jogador ao in�cio da partida dele
+/* ---- Funcoes de Jogo */
+// Imprime nome e informacoes do jogador ao inicio da partida dele
 void imprimeInicioJogo(lTrainer lista, int numPlayer) {
     pTrainer p;
     int rep = 0;
@@ -38,40 +38,72 @@ void imprimeInicioJogo(lTrainer lista, int numPlayer) {
 }
 // .
 
-void caminhoJogador(lTrainer lista, int numPlayer, int *x, int *y) {
+// recolhe as informacoes do jogador atual sempre que solicitado
+void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs) {
     pTrainer p;
     int rep = 0;
     p = lista.primeiro->prox;
-    //repeti??o para chegar at? o jogador atual
+    //repeticao para chegar ate o jogador atual
     while (rep < numPlayer) {
         p = p->prox;
         rep++;
     }
     // .
-    // descobre x e y do jogador atual
+    // descobre as info do jogador atual
     if (p != NULL) {
         *x = p->treinador.x;
         *y = p->treinador.y;
+        *pbs = p->treinador.tPokeballs;
     }
     //.
 }
+//.
 
-void explore(int tam, int* map, int x, int y, int *nx, int *ny) {
-    int i, j, maior = 0, newX = 0, newY = 0, lxe = x-1, lxd = x+1, lye = y-1, lyd = y+1;
-    // confere se as vari?veis que delimitam a regi?o de explora??o saem da matriz
+// varre a regiao do mapa proxima ao jogador e atribui a melhor posicao para deslocamento futuro
+void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action) {
+    int i, j, maior, newX = 0, newY = 0, lxe = x-1, lxd = x+1, lye = y-1, lyd = y+1;
+    // confere se as variaveis que delimitam a regiao de exploracao saem da matriz
     if (lxe < 0) lxe = 0;
     if (lxd >= tam) lxd = tam-1;
     if (lye < 0) lxe = 0;
     if (lyd >= tam) lyd = tam-1;
     // .
-    // varre a mini matriz que delimita a regi?o de explora??o e encontra o maior elemento
+    // varre a mini matriz que delimita a regiao de exploracao e encontra o maior elemento
     for (i = lxe; i <= lxd; i++) {
+        // declaracao de valores iniciais
+        if (i == lxe) {
+            maior = map[i + j*tam];
+            newX = i;
+            newY = j;
+        }
+        // .
         for (j = lye; j <= lyd; j++) {
             if (map[i + j*tam] > maior) {
-                maior = map[i + j*tam];
-                newX = i;
-                newY = j;
-                //conferir pokebolas pra pokemons e pokestops
+                if (map[i + j*tam] > 0 && map[i + j*tam] < 6) { // eh um pokemon
+                    if (numPBs == 0) {} // tem pokemon e nao tem pokebolas
+                    else {
+                        maior = map[i + j*tam];
+                        newX = i;
+                        newY = j;
+                        *action = 1;
+                    }
+                }
+                else if (map[i + j*tam] == 6) { // eh um pokestop
+                    if (numPBs == 3) {} // tem pokestop mas tem pokebolas
+                    else {
+                        maior = map[i + j*tam];
+                        newX = i;
+                        newY = j;
+                        *action = 2;
+                    }
+                }
+                else if (map[i + j*tam] == 8) {} // caminho ja passado
+                else {
+                    maior = map[i + j*tam];
+                    newX = i;
+                    newY = j;
+                    // TODO: diferenciacao de 0 (nada) e < 0 (perigo)
+                }
             }
         }
     }
@@ -79,6 +111,7 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny) {
     *nx = newX;
     *ny = newY;
 }
+// .
 
 void walk() {
     // mudar posicao

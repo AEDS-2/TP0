@@ -45,3 +45,6 @@
 
 /Biblioteca.h
 - cria«®«ªo da lista de posi«®«Øes
+
+==== 03/10/2016 ==== commit name : version.03
+- atualiza«®«ªo da fun«®«ªo de exploracao

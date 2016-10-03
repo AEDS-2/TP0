@@ -7,8 +7,8 @@
 int main () {
     FILE *entrada = fopen("ent.txt", "r");
     int tam, i, j, dLoop, m = 0, n = 0; // variaveis do loop de desenho
-    int inGame = 1, numPlayers;
-    int atualPlayer = 0, xPlayer = 0, yPlayer = 0, nx = 0, ny = 0, nPBs = 0; // variaveis usadas para ter as informações do jogador atual
+    int inGame = 1, numPlayers, action = -1;
+    int atualPlayer = 0, xPlayer = 0, yPlayer = 0, nx = 0, ny = 0, numPBs = 0; // variaveis usadas para ter as informações do jogador atual
     char token[10];
     // le primeiro item do arquivo = tamanho do mapa
     fscanf(entrada, "%d\n", &tam);
@@ -44,7 +44,8 @@ int main () {
         imprimeInicioJogo(*listaTrainer, atualPlayer);
         sleep(2);
         system("clear");
-        caminhoJogador(*listaTrainer, atualPlayer, &xPlayer, &yPlayer);
+        infoJogador(*listaTrainer, atualPlayer, &xPlayer, &yPlayer, &numPBs);
+        // TODO: passar esse for pra uma função, plmdds
         for(dLoop = 0; dLoop <= tam; dLoop++) { // loop que controla o numero de vezes que as linhas "+===+" e "| elemento |" serão desenhadas
             printf("\n+"); // primeiro simbolo da linha de "+===+"
             i = 0; // zera i para novo loop
@@ -73,7 +74,7 @@ int main () {
         }
         printf("\n"); // coloquei só porque por algum motivo que DEUS sabe, tava desconfigurando o desenho
         sleep(5);
-        explore(tam, *map, xPlayer, yPlayer, &nx, &ny);
+        explore(tam, *map, xPlayer, yPlayer, &nx, &ny, numPBs, &action);
         inGame++;
         atualPlayer++;
     }

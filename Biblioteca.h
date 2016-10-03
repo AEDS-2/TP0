@@ -42,7 +42,8 @@ void criaListaTrainer(lTrainer *lista);
 void insereTrainer(tTrainer x, lTrainer *lista);
 // Funcoes de Jogo
 void imprimeInicioJogo(lTrainer lista, int numPlayer);
-void caminhoJogador(lTrainer lista, int numPlayer, int *x, int *y);
-void explore(int tam, int* map, int x, int y, int *nx, int *ny);
+void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs);
+void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action);
+void action();
 void walk();
 void walkedPath();
