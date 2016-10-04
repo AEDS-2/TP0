@@ -52,3 +52,7 @@
 - criadas/atualizadas as funcoes walk, explore, desenhaMapa
 - criadas e alocadas fun«®«Øes de cria«®«ªo e inser«®«ªo de lista de posicoes
 - texto introdut«Ñrio feito com base
+
+==== 04/10/2016 ==== commit name : version.04
+- fiz coisa pra caralho
+- tem que consertar o char de infoJogador

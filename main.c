@@ -16,13 +16,13 @@
 
 int main () {
     FILE *entrada = fopen("ent.txt", "r");
-    int inGame = 1, atualPlay = 1, numPlayers, action = -1, tam, i = 0, j;
-    int atualPlayer = 0, xPlayer = 0, yPlayer = 0, nx = 0, ny = 0, numPBs = 0; // variaveis usadas para ter as informações do jogador atual
+    int inGame = 1, atualPlay = 1, numPlayers, tam, i = 0, j, action = -1, perigo = 0;
+    char namePlayer[15]; int atualPlayer = 0, xPlayer = 0, yPlayer = 0, nx = 0, ny = 0, numPBs = 0; // variaveis usadas para ter as informacoes do jogador atual
     char token[10];
     // le primeiro item do arquivo = tamanho do mapa
     fscanf(entrada, "%d\n", &tam);
     // .
-    // cria trainer temporário pra passagem pra lista / cria e aloca lista
+    // cria trainer temporario pra passagem pra lista / cria e aloca lista
     tTrainer tmpTrainer;
     lTrainer *listaTrainer = (lTrainer *) malloc(sizeof(lTrainer));
     criaListaTrainer(listaTrainer);
@@ -33,11 +33,11 @@ int main () {
     // .
 
 
-    /* textos introdutórios!!!
+    /* textos introdutorios!!!
     system("clear");
-    printf("=====* Bem-vindo/a a Pokemon - Matriz Version! *=====\n\n=> Siglas do Jogo:\n* - Posicao do Jogador\nX - Perigo\nP - Pokestop\n1~6 - Pokemons\n\n");
+    printf("=====* Bem-vindo/a a Pokemon - Matriz Version! *=====\n\n=> Siglas do Jogo:\n* - Posicao do Jogador\nX - Perigo\nP - Pokestop\n1~6 - Pokemons\n- - Espaco ja Passado\n\n");
     sleep(5);
-    //TODO: intruções/informações do jogo, como a sigla por exemplo
+    //TODO: intrucoes/informacoes do jogo, como a sigla por exemplo
     printf("As informacoes serao retiradas do arquivo, aguarde um momento\n");
     while (i<5) {
         sleep(1);
@@ -47,7 +47,7 @@ int main () {
     printf("Done!\n\n");
     sleep(2);
     // !!! */
-    // Coleta de dados do arquivo : matriz/mapa - variável, jogadores - lista
+    // Coleta de dados do arquivo : matriz/mapa - variavel, jogadores - lista
     int map[tam][tam];
     for (i = 0; i < tam; i++) {
         for (j = 0; j < tam; j++) {
@@ -65,17 +65,17 @@ int main () {
         insereTrainer(tmpTrainer, listaTrainer);
     }
     // .
-    int vamo =0;
+
     // repeticao do jogo
     while (inGame < tam) {
-        imprimeInicioJogo(*listaTrainer, atualPlayer); // imprime saudação inicial ao jogador atual
-        while (atualPlay) { // joga enquanto não muda jogador/nao acaba partida
-            printf("%d\n", vamo);
-            infoJogador(*listaTrainer, atualPlayer, &xPlayer, &yPlayer, &numPBs);
+        imprimeInicioJogo(*listaTrainer, atualPlayer); // imprime saudacao inicial ao jogador atual
+        infoJogador(*listaTrainer, atualPlayer, &xPlayer, &yPlayer, &numPBs, &namePlayer[15]); // recolhe info do jogador atual que estao na lista dos jogadores
+        while (atualPlay) { // joga enquanto nao acaba partida do jogador atual
+            // TODO: fazer pegar o primeiro local (inicial)
+            explore(tam, *map, xPlayer, yPlayer, &nx, &ny, numPBs, &action, &perigo);
+            walk(tam, *map, &xPlayer, &yPlayer, nx, ny, action, &numPBs);
             desenhaMapa(tam, *map, xPlayer, yPlayer);
-            explore(tam, *map, xPlayer, yPlayer, &nx, &ny, numPBs, &action);
-            walk(tam, *map, &xPlayer, &yPlayer, nx, ny, action);
-            vamo++;
+            printf("\n");
         }
         inGame++;
         atualPlayer++;
@@ -89,14 +89,14 @@ int main () {
         olha posicoes por perto
         anda (se posivel)
         desenha na tela
-        ação (se houver)
-        escreve ação na tela
+        acao (se houver)
+        escreve acao na tela
         sleep(1)
         clear
-        se fim de mapa, exibe pontuação do jogador, pokemons, recomeça loop de jogador
-        se não fim de mapa, então continua loop do jogador
-        se fim de jogo, clear, exibe ganhadores, (exibe animação de vitória?)
-        se não fim de jogo, continua loop de jogo
+        se fim de mapa, exibe pontuacao do jogador, pokemons, recomeca loop de jogador
+        se nao fim de mapa, entao continua loop do jogador
+        se fim de jogo, clear, exibe ganhadores, (exibe animacao de vitória?)
+        se nao fim de jogo, continua loop de jogo
     */
     return 0;
 }

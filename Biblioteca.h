@@ -45,7 +45,7 @@ void inserePosicao(tPos x, lPos *lista);
 // Funcoes de Jogo
 void imprimeInicioJogo(lTrainer lista, int numPlayer);
 void desenhaMapa (int tam, int *map, int xPlayer, int yPlayer);
-void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs);
-void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action);
-void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action);
+void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, char *nome[15]);
+void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action, int *perigo);
+void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *numPBs);
 void walkedPath();
