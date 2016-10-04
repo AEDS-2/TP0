@@ -12,7 +12,7 @@ typedef struct celulaPos {
 } celPos;
 
 typedef struct posicaoLista {
-    pPos primeiro, uiltimo;
+    pPos primeiro, ultimo;
 } lPos;
 //.
 
@@ -40,10 +40,12 @@ typedef struct trainerlista {
 // Funcoes de Listas
 void criaListaTrainer(lTrainer *lista);
 void insereTrainer(tTrainer x, lTrainer *lista);
+void criaListaPosicoes(lPos *lista);
+void inserePosicao(tPos x, lPos *lista);
 // Funcoes de Jogo
 void imprimeInicioJogo(lTrainer lista, int numPlayer);
+void desenhaMapa (int tam, int *map, int xPlayer, int yPlayer);
 void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs);
 void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action);
-void action();
-void walk();
+void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action);
 void walkedPath();

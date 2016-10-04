@@ -46,5 +46,9 @@
 /Biblioteca.h
 - cria«®«ªo da lista de posi«®«Øes
 
-==== 03/10/2016 ==== commit name : version.03
+==== 03/10/2016 ==== commit name : version.03.4 // commit dado no dia 04/09
 - atualiza«®«ªo da fun«®«ªo de exploracao
+- arrumada a repeticao inGame
+- criadas/atualizadas as funcoes walk, explore, desenhaMapa
+- criadas e alocadas fun«®«Øes de cria«®«ªo e inser«®«ªo de lista de posicoes
+- texto introdut«Ñrio feito com base
