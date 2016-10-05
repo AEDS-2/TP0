@@ -1,11 +1,13 @@
-// TODO next: configurar a lista de posicoes na funcao walk
 /*~
 > TODO
 : pontos soltos de ToDo pelo projeto
 : walkedPath
 : reler pdf
 : arrumar tempo de todos os sleeps
-: conferir porque o mapa desenhado nao ta atualizando!! > algum problema na varredura da matriz
+: nome nas info do jogador
+: listagem de pokemons (vetor)
+: listagem de posicoes (lista)
+: score total
 ~*/
 
 #include <stdio.h>
@@ -16,7 +18,7 @@
 
 int main () {
     FILE *entrada = fopen("ent.txt", "r");
-    int inGame = 1, atualPlay = 1, numPlayers, tam, i = 0, j, action = -1, perigo = 0;
+    int inGame = 1, atualPlay, numPlayers, tam, i = 0, j, action = -1, perigo = 0, firstPos;
     char namePlayer[15]; int atualPlayer = 0, xPlayer = 0, yPlayer = 0, nx = 0, ny = 0, numPBs = 0; // variaveis usadas para ter as informacoes do jogador atual
     char token[10];
     // le primeiro item do arquivo = tamanho do mapa
@@ -48,10 +50,11 @@ int main () {
     sleep(2);
     // !!! */
     // Coleta de dados do arquivo : matriz/mapa - variavel, jogadores - lista
-    int map[tam][tam];
+    int map[tam][tam], mapSave[tam][tam];
     for (i = 0; i < tam; i++) {
         for (j = 0; j < tam; j++) {
             fscanf(entrada, "%d ", &map[i][j]);
+            mapSave[i][j] = map[i][j];
         }
     }
     fscanf(entrada, "%d ", &numPlayers);
@@ -67,16 +70,38 @@ int main () {
     // .
 
     // repeticao do jogo
-    while (inGame < tam) {
-        imprimeInicioJogo(*listaTrainer, atualPlayer); // imprime saudacao inicial ao jogador atual
-        infoJogador(*listaTrainer, atualPlayer, &xPlayer, &yPlayer, &numPBs, &namePlayer[15]); // recolhe info do jogador atual que estao na lista dos jogadores
-        while (atualPlay) { // joga enquanto nao acaba partida do jogador atual
-            // TODO: fazer pegar o primeiro local (inicial)
-            explore(tam, *map, xPlayer, yPlayer, &nx, &ny, numPBs, &action, &perigo);
-            walk(tam, *map, &xPlayer, &yPlayer, nx, ny, action, &numPBs);
-            desenhaMapa(tam, *map, xPlayer, yPlayer);
-            printf("\n");
+    while (inGame <= numPlayers) {
+        // imprime saudacao inicial ao jogador atual e armazena informacoes dele
+        imprimeInicioJogo(*listaTrainer, atualPlayer);
+        infoJogador(*listaTrainer, atualPlayer, &xPlayer, &yPlayer, &numPBs, NULL); // TODO: fazer exibicao do nome
+        // .
+        // limpa variaveis para nova partida
+        firstPos = 1; atualPlay = 1;
+        for (i = 0; i < tam; i++) {
+            for (j = 0; j < tam; j++) {
+                map[i][j] = mapSave[i][j];
+            }
         }
+        //.
+
+        // joga enquanto nao acaba partida do jogador atual : explora, anda, desenha mapa e exibe informacoes
+        while (atualPlay) {
+            explore(tam, *map, xPlayer, yPlayer, &nx, &ny, numPBs, &action, &perigo, firstPos);
+            walk(tam, *map, &xPlayer, &yPlayer, nx, ny, action, &numPBs, &atualPlay);
+            // confere se partida ja acabou
+            if (atualPlay != 0) {
+                desenhaMapa(tam, *map, xPlayer, yPlayer);
+                printf("Player: [nome] | Pontuacao: [num]\nNumero de Pokebolas: %d | Numero de Pokemons Capturados: [num]\n", numPBs);
+                sleep(2);
+                system("clear");
+            }
+            // .
+            firstPos++;
+        }
+        // .
+
+        printf("Fim da Partida do Jogador [nome]!\nPontuacao Final: [score]\n\n");
+        sleep(3);
         inGame++;
         atualPlayer++;
     }

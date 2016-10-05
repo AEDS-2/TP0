@@ -21,7 +21,7 @@ typedef struct trainer {
     int chave;
     char name[10];
     int tPokeballs, x, y, sumScore;
-    int tPokedex; // fazer uma lista (pokemon, cp)
+    int tPokedex[6]; // fazer uma lista (pokemon, cp)
     int caminho; // lista de posicoes
 } tTrainer;
 
@@ -46,6 +46,6 @@ void inserePosicao(tPos x, lPos *lista);
 void imprimeInicioJogo(lTrainer lista, int numPlayer);
 void desenhaMapa (int tam, int *map, int xPlayer, int yPlayer);
 void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, char *nome[15]);
-void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action, int *perigo);
-void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *numPBs);
+void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action, int *perigo, int firstPos);
+void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *numPBs, int *atualPlay);
 void walkedPath();

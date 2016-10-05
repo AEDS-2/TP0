@@ -52,7 +52,7 @@ void imprimeInicioJogo(lTrainer lista, int numPlayer) {
     if (p != NULL) {
         printf("Player %d: %s\nPosicao Inicial: [%d, %d]\nGame Start!\n", p->treinador.chave, p->treinador.name, p->treinador.x, p->treinador.y);
     }
-    sleep(5);
+    sleep(2);
     system("clear");
 }
 // .
@@ -89,8 +89,6 @@ void desenhaMapa (int tam, int *map, int xPlayer, int yPlayer) {
         m++; // vai pra proxima linha da matriz do mapa
     }
     printf("\n");
-    sleep(2); //TODO: regular esse tempo
-
 }
 // .
 
@@ -116,8 +114,8 @@ void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, char *
 //.
 
 // varre a regiao do mapa proxima ao jogador e atribui a melhor posicao para deslocamento futuro
-void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action, int *perigo) {
-    int limEsqx = x-1, limDirx = x+1, limSupy = y-1, limInfy = y+1, maiorCP = 0, contEspacosVistos = 0, contEspacos8 = 0, action0 = 0;
+void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action, int *perigo, int firstPos) {
+    int limEsqx = x-1, limDirx = x+1, limSupy = y-1, limInfy = y+1, maiorCelula, maiorCP = 0, contEspacosVistos = 0, contEspacos8 = 0, action0 = 0;
     //  define os limites da mini matriz se ela extrapolar os limites da matriz do mapa
     if (limEsqx < 0) limEsqx = 0;
     if (limDirx >= tam) limDirx = tam-1;
@@ -128,63 +126,76 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
     int i = limEsqx, j = limSupy;
     *nx = i; *ny = j; *action = 0; *perigo = 0;
     // .
+    // caso em que eh a primeira posicao do jogador
+    if (firstPos == 1) {
+        limEsqx = x;
+        limDirx = x;
+        limSupy = y;
+        limInfy = y;
+    }
+    //.
+    maiorCelula = map[limEsqx + limSupy*tam];
     do {
         for (i = limEsqx; i <= limDirx; i++) { // varre a matriz de x-1 a x+1 (mini matriz das redondezas do player)
             for (j = limSupy; j <= limInfy; j++) { // varre a matriz de y-1 a y+1 (mini matriz das redondezas do player)
-                // caso em que a celula eh a celula em que o jogador atual estao
-                if (i == x && j == y) {
-                    // nao faz nada
-                }
-                // .
-                // caso em que a matriz foi varrida por completo e a action continua 0
-                else if (action0 && map[i + j*tam] != 8) {
-                    *nx = i;
-                    *ny = j;
-                    *action = 0;
-                    action0 = -1;
-                }
-                // .
-                // caso em que o espaco ja foi "pisado"
-                else if (map[i + j*tam] == 8) {
-                    contEspacos8++;
-                }
-                // .
-                // caso em que o espaco eh um pokestop
-                else if (map[i + j*tam] == 6) {
-                    if (numPBs > 0) {
-                    } // caso em que esta num pokestop, mas ja tem pokebolas
-                    else {
+                if ((map[i + j*tam] >= maiorCelula) || numPBs == 3) {
+                    // caso em que a celula eh a celula em que o jogador atual estao
+                    if ((i == x && j == y) && firstPos != 1) {
+                        // nao faz nada
+                        //printf("**** nao faz nada (%d)\n", *action); //teste
+                    }
+                    // .
+                    // caso em que a matriz foi varrida por completo e a action continua 0
+                    else if (action0 && map[i + j*tam] != 8) {
                         *nx = i;
                         *ny = j;
-                        *action = 1; // acao de pegar pokebolas
+                        *action = 0;
+                        action0 = -1;
                     }
-                }
-                // .
-                // caso em que eh encontrado um pokemon
-                else if (map[i + j*tam] > 0 && map[i + j*tam] < 6) { // eh um pokemon
-                    if (numPBs == 0) {} // caso em que encontra um pokemon mas nao tem pokebolas
-                    else if (map[i + j*tam] > maiorCP) {
+                    // .
+                    // caso em que o espaco ja foi "pisado"
+                    else if (map[i + j*tam] == 8) {
+                        contEspacos8++;
+                    }
+                    // .
+                    // caso em que o espaco eh um pokestop
+                    else if (map[i + j*tam] == 6) {
+                        if (numPBs > 0) {
+                        } // caso em que esta num pokestop, mas ja tem pokebolas
+                        else {
+                            *nx = i;
+                            *ny = j;
+                            *action = 1; // acao de pegar pokebolas
+                        }
+                    }
+                    // .
+                    // caso em que eh encontrado um pokemon
+                    else if (map[i + j*tam] > 0 && map[i + j*tam] < 6) { // eh um pokemon
+                        if (numPBs == 0) { } // caso em que encontra um pokemon mas nao tem pokebolas
+                        else if (map[i + j*tam] > maiorCP) {
+                            *nx = i;
+                            *ny = j;
+                            *action = 2; // acao de captura de pokemon
+                            maiorCP = map[i + j*tam];
+                        }
+                    }
+                    // .
+                    // caso em que eh uma celula "livre"
+                    else if (map[i + j*tam] == 0) {
                         *nx = i;
                         *ny = j;
-                        *action = 2; // acao de captura de pokemon
+                        *action = 3; // acao "sem acao"
                     }
+                    // .
+                    // caso em que a celula eh um "perigo"
+                    else if (map[i + j*tam] < 0) {
+                        *nx = i;
+                        *ny = j;
+                        *action = 4; // acao de tomar dano/diminuir score
+                        *perigo = map[i + j*tam];
+                    }
+                    // .
                 }
-                // .
-                // caso em que eh uma celula "livre"
-                else if (map[i + j*tam] == 0) {
-                    *nx = i;
-                    *ny = j;
-                    *action = 3; // acao "sem acao"
-                }
-                // .
-                // caso em que a celula eh um "perigo"
-                else if (map[i + j*tam] < 0) {
-                    *nx = i;
-                    *ny = j;
-                    *action = 4; // acao de tomar dano/diminuir score
-                    *perigo = map[i + j*tam];
-                }
-                // .
                 contEspacosVistos++; // conta quantos espacos foram varridos na matriz
             }
         }
@@ -192,7 +203,7 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
         if (*action == 0 && action0 != -1) {
             // caso em que todos os espacos sao 8 (ja pisados) : fim de partida
             if (contEspacos8 == (contEspacosVistos-1)) {
-                //TODO: fazer caso em que nao ha mais para onde andar
+                *action = -1;
             }
             // .
             // caso em que todos os espacos foram vistos mas nao houve acao (nao pode pegar pokemon nem pokebolas)
@@ -201,12 +212,14 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
             }
         }
     } while (action0 == 1);
-
 }
 // .
 
-void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *numPBs) {
+void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *numPBs, int *atualPlay) {
     switch (action) {
+        case -1: // fim da partida do jogador atual
+            *atualPlay = 0;
+            break;
         case 0: // so de passagem (nao realiza acao da celula)
             printf(">> Passando por celula sem acao: [%d, %d]\n", nx, ny);
             break;
