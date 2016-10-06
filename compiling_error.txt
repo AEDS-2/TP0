@@ -1,7 +1,0 @@
-/tmp/ccqABDJc.o: na função `main':
-main.c:(.text+0xbb): referência indefinida para `criaListaTrainer'
-main.c:(.text+0x359): referência indefinida para `insereTrainer'
-main.c:(.text+0x39a): referência indefinida para `imprimeInicioJogo'
-main.c:(.text+0x3de): referência indefinida para `caminhoJogador'
-main.c:(.text+0x5c4): referência indefinida para `explore'
-collect2: error: ld returned 1 exit status
