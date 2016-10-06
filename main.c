@@ -71,7 +71,7 @@ int main () {
     while (inGame <= numPlayers) {
         // imprime saudacao inicial ao jogador atual e armazena informacoes dele
         imprimeInicioJogo(*listaTrainer, atualPlayer);
-        infoJogador(*listaTrainer, atualPlayer, &xPlayer, &yPlayer, &numPBs, &namePlayer, *listaPos, Pokedex, &sumScore); // TODO: fazer exibicao do nome
+        infoJogador(*listaTrainer, atualPlayer, &xPlayer, &yPlayer, &numPBs, *listaPos, Pokedex, &sumScore);
         // .
         // limpa variaveis para nova partida
         firstPos = 1; atualPlay = 1; pokeCapturados = 0;
@@ -106,10 +106,10 @@ int main () {
         }
         // .
         printf("Fim da Partida do Jogador [nome]!\nPontuacao Final: %d\n\n", sumScore);
+        attJogador(*listaTrainer, atualPlayer, xPlayer, yPlayer, numPBs, *listaPos, Pokedex, sumScore); // atualiza lista do jogador atual
         sleep(3);
-
         // retorno de todas as informacoes para o arquivo
-        //fprintf(saida, "\n %s ", namePlayer);
+            //fprintf(saida, "\n %s ", namePlayer);
         fprintf(saida, "%d \n", sumScore);
         imprimePassos(*listaPos, saida);
         // .

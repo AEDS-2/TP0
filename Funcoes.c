@@ -50,7 +50,7 @@ void imprimeInicioJogo(lTrainer lista, int numPlayer) {
     }
     // .
     if (p != NULL) {
-        printf("Player %d: %s\nPosicao Inicial: [%d, %d]\nGame Start!\n", p->treinador.chave, p->treinador.name, p->treinador.x, p->treinador.y);
+        printf("Player %d: %s\nPosicao Inicial: [%d, %d] (%d)\nGame Start!\n", p->treinador.chave, p->treinador.name, p->treinador.x, p->treinador.y, p->treinador.sumScore);
     }
     sleep(2);
     system("clear");
@@ -104,7 +104,7 @@ void desenhaMapa (int tam, int *map, int xPlayer, int yPlayer) {
 // .
 
 // recolhe as informacoes do jogador atual sempre que solicitado
-void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, char nome[15], lPos listaPos, int Pokedex[6], int *sumScore) {
+void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, lPos listaPos, int Pokedex[6], int *sumScore) {
     pTrainer p;
     int rep = 0;
     p = lista.primeiro->prox;
@@ -119,7 +119,6 @@ void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, char n
         *x = p->treinador.x;
         *y = p->treinador.y;
         *pbs = p->treinador.tPokeballs;
-        nome = p->treinador.name;
         listaPos = p->treinador.listaCaminho;
         Pokedex = p->treinador.tPokedex;
         *sumScore = p->treinador.sumScore;
@@ -127,6 +126,54 @@ void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, char n
     //.
 }
 //.
+
+// recolhe as informacoes do jogador atual sempre que solicitado
+void attJogador(lTrainer lista, int numPlayer, int x, int y, int pbs, lPos listaPos, int Pokedex[6], int sumScore) {
+    pTrainer p;
+    int rep = 0, i = 0;
+    p = lista.primeiro->prox;
+    //repeticao para chegar ate o jogador atual
+    while (rep < numPlayer) {
+        p = p->prox;
+        rep++;
+    }
+    // .
+    // descobre as info do jogador atual
+    if (p != NULL) {
+        p->treinador.x = x;
+        p->treinador.y = y;
+        p->treinador.tPokeballs = pbs;
+        p->treinador.listaCaminho = listaPos;
+        p->treinador.sumScore = sumScore;
+        for (i = 0; i<6; i++) {
+            p->treinador.tPokedex[i] = Pokedex[i];
+        }
+    }
+    //.
+}
+//.
+
+
+void outro(lTrainer lista, int numPlayer) {
+    pTrainer p;
+    p = lista.primeiro->prox;
+    int maiorScore = 0, numMaior = 0, maiorCP = 0, menorPassos = 0, rep = 0;
+    //repeticao para chegar ate o jogador atual
+    while (rep < numPlayer) {
+        if (p->treinador.sumScore > maiorScore) {
+            maiorScore = p->treinador.sumScore;
+            numMaior = numPlayer;
+            if (p->treinador.sumScore == maiorScore && p->treinador.tPokedex[5] > maiorCP) {
+                maiorScore = p->treinador.sumScore;
+                numMaior = numPlayer;
+                //if (p->treinador.tPokedex[5] == maiorCP && p->treinador.listaCaminho.contPassos < menorPassos) {
+            }
+        }
+        p = p->prox;
+        rep++;
+    }
+    // .
+}
 
 // varre a regiao do mapa proxima ao jogador e atribui a melhor posicao para deslocamento futuro
 void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action, int *perigo, int firstPos, int Pokedex[6], int *sumScore) {
