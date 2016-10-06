@@ -51,3 +51,5 @@ void attJogador(lTrainer lista, int numPlayer, int x, int y, int pbs, lPos lista
 void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action, int *perigo, int firstPos, int Pokedex[6], int *sumScore);
 void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *numPBs, int *atualPlay, lPos *listaPos, int *pokeCapturados);
 void imprimePassos(lPos lista, FILE *saida);
+void imprimeNome(lTrainer lista, int numPlayer, FILE *saida);
+void declaraVencedor(lTrainer lista, int numPlayer);

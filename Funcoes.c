@@ -50,32 +50,51 @@ void imprimeInicioJogo(lTrainer lista, int numPlayer) {
     }
     // .
     if (p != NULL) {
-        printf("Player %d: %s\nPosicao Inicial: [%d, %d] (%d)\nGame Start!\n", p->treinador.chave, p->treinador.name, p->treinador.x, p->treinador.y, p->treinador.sumScore);
+        printf("Player %d: %s\nPosicao Inicial: [%d, %d]\nGame Start!\n", p->treinador.chave, p->treinador.name, p->treinador.x, p->treinador.y);
     }
     sleep(2);
     system("clear");
 }
 // .
 
+// Imprime nome do jogador
+void imprimeNome(lTrainer lista, int numPlayer, FILE *saida) {
+    pTrainer p;
+    int rep = 0;
+    p = lista.primeiro->prox;
+    // repeticao para avancar ate o jogador atual
+    while (rep < numPlayer) {
+        p = p->prox;
+        rep++;
+    }
+    // .
+    if (p != NULL) {
+        fprintf(saida, "\n%s ", p->treinador.name);
+    }
+}
+// .
+
+// grava no arquivo o caminho percorrido pelo jogador
 void imprimePassos(lPos lista, FILE *saida) {
     pPos p;
     p = lista.primeiro->prox;
     // repeticao para avancar ate o jogador atual
     while (p != NULL) {
-        fprintf(saida, " %d, %d ", p->posicao.x, p->posicao.y);
+        fprintf(saida, " %d,%d ", p->posicao.x, p->posicao.y);
         p = p->prox;
     }
     // .
 }
+// .
 
 // desenha mapa na tela
 void desenhaMapa (int tam, int *map, int xPlayer, int yPlayer) {
     int dLoop = 0, i, j, m = 0, n = 0;
-    for(dLoop = 0; dLoop <= tam; dLoop++) { // loop que controla o numero de vezes que as linhas "+===+" e "| elemento |" ser?o desenhadas
+    for(dLoop = 0; dLoop <= tam; dLoop++) { // loop que controla o numero de vezes que as linhas "+===+" e "| elemento |" serao desenhadas
         printf("\n+"); // primeiro simbolo da linha de "+===+"
         i = 0; // zera i para novo loop
-        n = 0; // come?a nova numera??o de colunas na exibicao dos numeros no mapa
-        while (i < tam) { // desenha a quantidade de necessaria de "+===+" em cada linha (se tam = 3, desenha 3 vezes, uma linha s?)
+        n = 0; // comeca nova numeracao de colunas na exibicao dos numeros no mapa
+        while (i < tam) { // desenha a quantidade de necessaria de "+===+" em cada linha (se tam = 3, desenha 3 vezes, uma linha so)
             printf("===+");
             i++;
         }
@@ -83,14 +102,14 @@ void desenhaMapa (int tam, int *map, int xPlayer, int yPlayer) {
         if (dLoop < tam) { // confere numero de exibicoes, pois o while acima deve exibir uma vez a mais
             printf("\n|"); // primeiro simobolo da linha de "| elemento |"
             while (j < tam) { //desenha a quantidade de "| elemento |" em cada linha
-            if (m == xPlayer && n == yPlayer) //jogador
-                printf(" * |");
+                if (m == xPlayer && n == yPlayer) //jogador
+                    printf(" * |");
                 else if (map[m + n*tam] < 0) // perigo
                     printf(" X |");
-                else if (map[m + n*tam] == 6) // pokestop
-                    printf(" P |");
                 else if (map[m + n*tam] == 8) // caminho passado
                     printf(" - |");
+                else if (map[m + n*tam] == 6) // pokestop
+                    printf(" P |");
                 else //pokemons
                     printf(" %d |", map[m + n*tam]);
                 n++;
@@ -127,7 +146,7 @@ void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, lPos l
 }
 //.
 
-// recolhe as informacoes do jogador atual sempre que solicitado
+// atualiza as informacoes na lista do jogador
 void attJogador(lTrainer lista, int numPlayer, int x, int y, int pbs, lPos listaPos, int Pokedex[6], int sumScore) {
     pTrainer p;
     int rep = 0, i = 0;
@@ -154,7 +173,7 @@ void attJogador(lTrainer lista, int numPlayer, int x, int y, int pbs, lPos lista
 //.
 
 
-void outro(lTrainer lista, int numPlayer) {
+void declaraVencedor(lTrainer lista, int numPlayer) {
     pTrainer p;
     p = lista.primeiro->prox;
     int maiorScore = 0, numMaior = 0, maiorCP = 0, menorPassos = 0, rep = 0;
@@ -162,11 +181,15 @@ void outro(lTrainer lista, int numPlayer) {
     while (rep < numPlayer) {
         if (p->treinador.sumScore > maiorScore) {
             maiorScore = p->treinador.sumScore;
-            numMaior = numPlayer;
+            numMaior = rep;
+            printf("if1: maiorScore: %d | numMaior: %d\n", maiorScore, numMaior);
             if (p->treinador.sumScore == maiorScore && p->treinador.tPokedex[5] > maiorCP) {
                 maiorScore = p->treinador.sumScore;
-                numMaior = numPlayer;
-                //if (p->treinador.tPokedex[5] == maiorCP && p->treinador.listaCaminho.contPassos < menorPassos) {
+                numMaior = rep;
+                printf("if2: maiorScore: %d | numMaior: %d\n", maiorScore, numMaior);
+                if (p->treinador.tPokedex[5] == maiorCP ){//&& p->treinador.listaCaminho.contPassos < menorPassos) {
+                    // acrescenta outro
+                }
             }
         }
         p = p->prox;
@@ -196,7 +219,7 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
         limInfy = y;
     }
     //.
-    maiorCelula = map[limEsqx + limSupy*tam];
+    maiorCelula = -100;
     do {
         for (i = limEsqx; i <= limDirx; i++) { // varre a matriz de x-1 a x+1 (mini matriz das redondezas do player)
             for (j = limSupy; j <= limInfy; j++) { // varre a matriz de y-1 a y+1 (mini matriz das redondezas do player)
@@ -213,6 +236,7 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
                         *ny = j;
                         *action = 0;
                         action0 = -1;
+                        maiorCelula = map[i + j*tam];
                     }
                     // .
                     // caso em que o espaco ja foi "pisado"
@@ -228,6 +252,7 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
                             *nx = i;
                             *ny = j;
                             *action = 1; // acao de pegar pokebolas
+                            maiorCelula = map[i + j*tam];
                         }
                     }
                     // .
@@ -239,7 +264,7 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
                             *ny = j;
                             *action = 2; // acao de captura de pokemon
                             maiorCP = map[i + j*tam];
-
+                            maiorCelula = map[i + j*tam];
                         }
                     }
                     // .
@@ -248,6 +273,7 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
                         *nx = i;
                         *ny = j;
                         *action = 3; // acao "sem acao"
+                        maiorCelula = map[i + j*tam];
                     }
                     // .
                     // caso em que a celula eh um "perigo"
@@ -256,6 +282,7 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
                         *ny = j;
                         *action = 4; // acao de tomar dano/diminuir score
                         *perigo = map[i + j*tam];
+                        maiorCelula = map[i + j*tam];
                     }
                     // .
                 }
@@ -312,13 +339,14 @@ void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *nu
             printf(">> Perigo! [%d, %d]\n", nx, ny);
             break;
     }
-    *x = nx;
-    *y = ny;
     // lista de posicoes
-    tmpPos.x = *x;
-    tmpPos.y = *y;
+    tmpPos.x = nx;
+    tmpPos.y = ny;
     tmpPos.contPassos+=1;
     inserePosicao(tmpPos, listaPos);
     // .
+
+    *x = nx;
+    *y = ny;
 }
 void walkedPath();
