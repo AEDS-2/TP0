@@ -27,7 +27,7 @@
 
 ==== 23/09/2016 ==== commit name: version.23
 /Biblioteca.h /Funcoes.h /main.c
-- tentativa de usar as funcoes dos slides; se não for feita nova tentativa, voltar para commit anterior
+- tentativa de usar as funcoes dos slides; se nao for feita nova tentativa, voltar para commit anterior
 
 ==== 27/09/2016 ==== commit name: version.27
 * geral

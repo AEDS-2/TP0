@@ -43,7 +43,7 @@ void imprimeInicioJogo(lTrainer lista, int numPlayer) {
     pTrainer p;
     int rep = 0;
     p = lista.primeiro->prox;
-    // repetição para avançar até o jogador atual
+    // repeticao para avancar ate o jogador atual
     while (rep < numPlayer) {
         p = p->prox;
         rep++;
@@ -56,6 +56,17 @@ void imprimeInicioJogo(lTrainer lista, int numPlayer) {
     system("clear");
 }
 // .
+
+void imprimePassos(lPos lista, FILE *saida) {
+    pPos p;
+    p = lista.primeiro->prox;
+    // repeticao para avancar ate o jogador atual
+    while (p != NULL) {
+        fprintf(saida, " %d, %d ", p->posicao.x, p->posicao.y);
+        p = p->prox;
+    }
+    // .
+}
 
 // desenha mapa na tela
 void desenhaMapa (int tam, int *map, int xPlayer, int yPlayer) {
@@ -93,7 +104,7 @@ void desenhaMapa (int tam, int *map, int xPlayer, int yPlayer) {
 // .
 
 // recolhe as informacoes do jogador atual sempre que solicitado
-void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, char *nome[15]) {
+void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, char nome[15], lPos listaPos, int Pokedex[6], int *sumScore) {
     pTrainer p;
     int rep = 0;
     p = lista.primeiro->prox;
@@ -108,13 +119,17 @@ void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, char *
         *x = p->treinador.x;
         *y = p->treinador.y;
         *pbs = p->treinador.tPokeballs;
+        nome = p->treinador.name;
+        listaPos = p->treinador.listaCaminho;
+        Pokedex = p->treinador.tPokedex;
+        *sumScore = p->treinador.sumScore;
     }
     //.
 }
 //.
 
 // varre a regiao do mapa proxima ao jogador e atribui a melhor posicao para deslocamento futuro
-void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action, int *perigo, int firstPos) {
+void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action, int *perigo, int firstPos, int Pokedex[6], int *sumScore) {
     int limEsqx = x-1, limDirx = x+1, limSupy = y-1, limInfy = y+1, maiorCelula, maiorCP = 0, contEspacosVistos = 0, contEspacos8 = 0, action0 = 0;
     //  define os limites da mini matriz se ela extrapolar os limites da matriz do mapa
     if (limEsqx < 0) limEsqx = 0;
@@ -142,7 +157,7 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
                     // caso em que a celula eh a celula em que o jogador atual estao
                     if ((i == x && j == y) && firstPos != 1) {
                         // nao faz nada
-                        //printf("**** nao faz nada (%d)\n", *action); //teste
+                        // printf("**** nao faz nada (%d)\n", *action); //teste
                     }
                     // .
                     // caso em que a matriz foi varrida por completo e a action continua 0
@@ -177,6 +192,7 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
                             *ny = j;
                             *action = 2; // acao de captura de pokemon
                             maiorCP = map[i + j*tam];
+
                         }
                     }
                     // .
@@ -212,10 +228,16 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
             }
         }
     } while (action0 == 1);
+    // pontuacao e pokedex
+    Pokedex[maiorCP]+=1;
+    if (*action == 2) *sumScore+=maiorCP;
+    else if (*action == 4) *sumScore+=*perigo;
+    //.
 }
 // .
 
-void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *numPBs, int *atualPlay) {
+void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *numPBs, int *atualPlay, lPos *listaPos, int *pokeCapturados) {
+    tPos tmpPos;
     switch (action) {
         case -1: // fim da partida do jogador atual
             *atualPlay = 0;
@@ -231,6 +253,7 @@ void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *nu
         case 2: // pega pokemon
             map[*x + (*y * tam)] = 8;
             *numPBs-=1;
+            *pokeCapturados+=1;
             printf(">> Pokemon capturado! [%d, %d]\n", nx, ny);
             break;
         case 3: // celula livre
@@ -242,8 +265,13 @@ void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *nu
             printf(">> Perigo! [%d, %d]\n", nx, ny);
             break;
     }
-    // TODO: acrescenta nova posicao na lista de posicoes passadas
     *x = nx;
     *y = ny;
+    // lista de posicoes
+    tmpPos.x = *x;
+    tmpPos.y = *y;
+    tmpPos.contPassos+=1;
+    inserePosicao(tmpPos, listaPos);
+    // .
 }
 void walkedPath();
