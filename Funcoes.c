@@ -183,7 +183,6 @@ void declaraVencedor(lTrainer lista, int numPlayer, FILE *saida) {
     for (rep = 0; rep < numPlayer; rep++) {
         p->treinador.contMaior = 1;
         p = p->prox;
-        printf("%d eh vencedor\n", rep);
     }
     //.
     p = lista.primeiro->prox;
@@ -198,7 +197,6 @@ void declaraVencedor(lTrainer lista, int numPlayer, FILE *saida) {
     for (rep = 0; rep < numPlayer; rep++) {
         if (p->treinador.sumScore < maiorScore) {
             p->treinador.contMaior = 0;
-            printf("rep score: %d\n", rep);
         }
         p = p->prox;
     }
@@ -208,15 +206,14 @@ void declaraVencedor(lTrainer lista, int numPlayer, FILE *saida) {
     // descobre maior num de pokemons com cp alto entre os jogadores e deixa somente como vencedor aquele/s que tenha/m o mesmo numero
     for (rep = 0; rep < numPlayer; rep++) {
         if (p->treinador.tPokedex[5] > maiorCP && p->treinador.contMaior == 1) {
-            maiorCP = p->treinador.sumScore;
+            maiorCP = p->treinador.tPokedex[5];
         }
         p = p->prox;
     }
     p = lista.primeiro->prox;
     for (rep = 0; rep < numPlayer; rep++) {
-        if (p->treinador.tPokedex[5] < maiorCP) {
+        if (p->treinador.tPokedex[5] < maiorCP && p->treinador.contMaior == 1) {
             p->treinador.contMaior = 0;
-            printf("%d nao eh mais vencedor\n", rep);
         }
         p = p->prox;
     }
@@ -224,8 +221,8 @@ void declaraVencedor(lTrainer lista, int numPlayer, FILE *saida) {
     //.
 
     // finalmente, descobre menor num de passos entre os jogadores e deixa somente como vencedor aquele/s que tenha/m o mesmo numero
-    for (rep = 0; rep < numPlayer; rep++ && p->treinador.contMaior == 1) {
-        if (p->treinador.contPassos < menorPassos) {
+    for (rep = 0; rep < numPlayer; rep++) {
+        if (p->treinador.contPassos < menorPassos&& p->treinador.contMaior == 1) {
             menorPassos = p->treinador.sumScore;
         }
         p = p->prox;
@@ -234,7 +231,6 @@ void declaraVencedor(lTrainer lista, int numPlayer, FILE *saida) {
     for (rep = 0; rep < numPlayer; rep++) {
         if (p->treinador.contPassos < menorPassos) {
             p->treinador.contMaior = 0;
-            printf("%d nao eh mais vencedor\n", rep);
         }
         p = p->prox;
     }
@@ -243,11 +239,11 @@ void declaraVencedor(lTrainer lista, int numPlayer, FILE *saida) {
 
     // imprime no arquivo o/s vencedor/es
     fprintf(saida, "\nVENCEDOR ");
+    printf("*** VENCEDOR(ES) ***\n");
     for (rep = 0; rep < numPlayer; rep++) {
-        printf("%d\n", rep);
         if (p->treinador.contMaior == 1) {
-            printf("vencedor: %s\n", p->treinador.name);
-            printf(" %s\n", p->treinador.name);
+            fprintf(saida, " %s ", p->treinador.name);
+            printf("%s\n", p->treinador.name);
         }
         p = p->prox;
     }
