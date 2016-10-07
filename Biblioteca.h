@@ -3,7 +3,6 @@
 typedef struct pos {
     int x; //linha
     int y; //coluna
-    int contPassos;
 } tPos;
 
 typedef struct celulaPos *pPos;
@@ -24,6 +23,7 @@ typedef struct trainer {
     int tPokeballs, x, y, sumScore;
     int tPokedex[6]; // fazer uma lista (pokemon, cp)
     lPos listaCaminho; // lista de posicoes
+    int contPassos, contMaior;
 } tTrainer;
 
 typedef struct tCelula *pTrainer;
@@ -47,9 +47,9 @@ void inserePosicao(tPos x, lPos *lista);
 void imprimeInicioJogo(lTrainer lista, int numPlayer);
 void desenhaMapa (int tam, int *map, int xPlayer, int yPlayer);
 void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, lPos listaPos, int Pokedex[6], int *sumScore);
-void attJogador(lTrainer lista, int numPlayer, int x, int y, int pbs, lPos listaPos, int Pokedex[6], int sumScore);
+void attJogador(lTrainer lista, int numPlayer, int x, int y, int pbs, lPos listaPos, int Pokedex[6], int sumScore, int contPassos);
 void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int *action, int *perigo, int firstPos, int Pokedex[6], int *sumScore);
-void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *numPBs, int *atualPlay, lPos *listaPos, int *pokeCapturados);
+void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *numPBs, int *atualPlay, lPos *listaPos, int *pokeCapturados, int *contPassos);
 void imprimePassos(lPos lista, FILE *saida);
 void imprimeNome(lTrainer lista, int numPlayer, FILE *saida);
-void declaraVencedor(lTrainer lista, int numPlayer);
+void declaraVencedor(lTrainer lista, int numPlayer, FILE *saida);

@@ -147,7 +147,7 @@ void infoJogador(lTrainer lista, int numPlayer, int *x, int *y, int *pbs, lPos l
 //.
 
 // atualiza as informacoes na lista do jogador
-void attJogador(lTrainer lista, int numPlayer, int x, int y, int pbs, lPos listaPos, int Pokedex[6], int sumScore) {
+void attJogador(lTrainer lista, int numPlayer, int x, int y, int pbs, lPos listaPos, int Pokedex[6], int sumScore, int contPassos) {
     pTrainer p;
     int rep = 0, i = 0;
     p = lista.primeiro->prox;
@@ -164,6 +164,7 @@ void attJogador(lTrainer lista, int numPlayer, int x, int y, int pbs, lPos lista
         p->treinador.tPokeballs = pbs;
         p->treinador.listaCaminho = listaPos;
         p->treinador.sumScore = sumScore;
+        p->treinador.contPassos = contPassos;
         for (i = 0; i<6; i++) {
             p->treinador.tPokedex[i] = Pokedex[i];
         }
@@ -173,29 +174,83 @@ void attJogador(lTrainer lista, int numPlayer, int x, int y, int pbs, lPos lista
 //.
 
 
-void declaraVencedor(lTrainer lista, int numPlayer) {
+void declaraVencedor(lTrainer lista, int numPlayer, FILE *saida) {
     pTrainer p;
     p = lista.primeiro->prox;
-    int maiorScore = 0, numMaior = 0, maiorCP = 0, menorPassos = 0, rep = 0;
-    //repeticao para chegar ate o jogador atual
-    while (rep < numPlayer) {
+    int maiorScore = 0, maiorCP = 0, menorPassos = 0, rep = 0;
+
+    // declara que todos sao vencedores (que feliz, nao?)
+    for (rep = 0; rep < numPlayer; rep++) {
+        p->treinador.contMaior = 1;
+        p = p->prox;
+        printf("%d eh vencedor\n", rep);
+    }
+    //.
+    p = lista.primeiro->prox;
+    // descobre maior Score entre os jogadores e deixa somente como vencedor aquele/s que tenha/m o mesmo score
+    for (rep = 0; rep < numPlayer; rep++) {
         if (p->treinador.sumScore > maiorScore) {
             maiorScore = p->treinador.sumScore;
-            numMaior = rep;
-            printf("if1: maiorScore: %d | numMaior: %d\n", maiorScore, numMaior);
-            if (p->treinador.sumScore == maiorScore && p->treinador.tPokedex[5] > maiorCP) {
-                maiorScore = p->treinador.sumScore;
-                numMaior = rep;
-                printf("if2: maiorScore: %d | numMaior: %d\n", maiorScore, numMaior);
-                if (p->treinador.tPokedex[5] == maiorCP ){//&& p->treinador.listaCaminho.contPassos < menorPassos) {
-                    // acrescenta outro
-                }
-            }
         }
         p = p->prox;
-        rep++;
     }
-    // .
+    p = lista.primeiro->prox;
+    for (rep = 0; rep < numPlayer; rep++) {
+        if (p->treinador.sumScore < maiorScore) {
+            p->treinador.contMaior = 0;
+            printf("rep score: %d\n", rep);
+        }
+        p = p->prox;
+    }
+    p = lista.primeiro->prox;
+    //.
+
+    // descobre maior num de pokemons com cp alto entre os jogadores e deixa somente como vencedor aquele/s que tenha/m o mesmo numero
+    for (rep = 0; rep < numPlayer; rep++) {
+        if (p->treinador.tPokedex[5] > maiorCP && p->treinador.contMaior == 1) {
+            maiorCP = p->treinador.sumScore;
+        }
+        p = p->prox;
+    }
+    p = lista.primeiro->prox;
+    for (rep = 0; rep < numPlayer; rep++) {
+        if (p->treinador.tPokedex[5] < maiorCP) {
+            p->treinador.contMaior = 0;
+            printf("%d nao eh mais vencedor\n", rep);
+        }
+        p = p->prox;
+    }
+    p = lista.primeiro->prox;
+    //.
+
+    // finalmente, descobre menor num de passos entre os jogadores e deixa somente como vencedor aquele/s que tenha/m o mesmo numero
+    for (rep = 0; rep < numPlayer; rep++ && p->treinador.contMaior == 1) {
+        if (p->treinador.contPassos < menorPassos) {
+            menorPassos = p->treinador.sumScore;
+        }
+        p = p->prox;
+    }
+    p = lista.primeiro->prox;
+    for (rep = 0; rep < numPlayer; rep++) {
+        if (p->treinador.contPassos < menorPassos) {
+            p->treinador.contMaior = 0;
+            printf("%d nao eh mais vencedor\n", rep);
+        }
+        p = p->prox;
+    }
+    p = lista.primeiro->prox;
+    //.
+
+    // imprime no arquivo o/s vencedor/es
+    fprintf(saida, "\nVENCEDOR ");
+    for (rep = 0; rep < numPlayer; rep++) {
+        printf("%d\n", rep);
+        if (p->treinador.contMaior == 1) {
+            printf("vencedor: %s\n", p->treinador.name);
+            printf(" %s\n", p->treinador.name);
+        }
+        p = p->prox;
+    }
 }
 
 // varre a regiao do mapa proxima ao jogador e atribui a melhor posicao para deslocamento futuro
@@ -246,7 +301,7 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
                     // .
                     // caso em que o espaco eh um pokestop
                     else if (map[i + j*tam] == 6) {
-                        if (numPBs > 0) {
+                        if (numPBs > 0 && firstPos != 1) {
                         } // caso em que esta num pokestop, mas ja tem pokebolas
                         else {
                             *nx = i;
@@ -310,7 +365,7 @@ void explore(int tam, int* map, int x, int y, int *nx, int *ny, int numPBs, int 
 }
 // .
 
-void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *numPBs, int *atualPlay, lPos *listaPos, int *pokeCapturados) {
+void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *numPBs, int *atualPlay, lPos *listaPos, int *pokeCapturados, int *contPassos) {
     tPos tmpPos;
     switch (action) {
         case -1: // fim da partida do jogador atual
@@ -320,33 +375,32 @@ void walk(int tam, int* map, int *x, int *y, int nx, int ny, int action, int *nu
             printf(">> Passando por celula sem acao: [%d, %d]\n", nx, ny);
             break;
         case 1: // pega pokebolas
-            map[*x + (*y * tam)] = 8;
+            map[nx + (ny * tam)] = 8;
             *numPBs+=1;
             printf(">> Pokestop: +1 pokebola! [%d, %d]\n", nx, ny);
             break;
         case 2: // pega pokemon
-            map[*x + (*y * tam)] = 8;
+            map[nx + (ny * tam)] = 8;
             *numPBs-=1;
             *pokeCapturados+=1;
             printf(">> Pokemon capturado! [%d, %d]\n", nx, ny);
             break;
         case 3: // celula livre
-            map[*x + (*y * tam)] = 8;
+            map[nx + (ny * tam)] = 8;
             printf(">> Celula 0: celula livre, passagem sem danos ou ganhos! [%d, %d]\n", nx, ny);
             break;
         case 4: // perigo
-            map[*x + (*y * tam)] = 8;
+            map[nx + (ny * tam)] = 8;
             printf(">> Perigo! [%d, %d]\n", nx, ny);
             break;
     }
     // lista de posicoes
     tmpPos.x = nx;
     tmpPos.y = ny;
-    tmpPos.contPassos+=1;
+    contPassos+=1;
     inserePosicao(tmpPos, listaPos);
     // .
 
     *x = nx;
     *y = ny;
 }
-void walkedPath();

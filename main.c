@@ -1,7 +1,7 @@
 /*~
 > TODO
 : exibir vencedor
-: caso em que fica preso sem acao (nao ha pokebolas mas todos os espacos proximos sao pokemons)
+:
 ~*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,7 +11,7 @@
 
 int main () {
     FILE *entrada = fopen("ent.txt", "r"), *saida = fopen("sai.txt", "w");
-    int inGame = 1, atualPlay, numPlayers, tam, i = 0, j, action = -1, perigo = 0, firstPos, sumScore = 0, pokeCapturados = 0;
+    int inGame = 1, atualPlay, numPlayers, tam, i = 0, j, action = -1, perigo = 0, firstPos, sumScore = 0, pokeCapturados = 0, contPassos = 0;
     int Pokedex[6];
     int atualPlayer = 0, xPlayer = 0, yPlayer = 0, nx = 0, ny = 0, numPBs = 0; // variaveis usadas para ter as informacoes do jogador atual
     char token[10];
@@ -27,7 +27,7 @@ int main () {
     lPos *listaPos = (lPos *) malloc(sizeof(lPos));
     // .
 
-    /*/ texto introdutorio
+/*   // texto introdutorio
     system("clear");
     printf("=====* Bem-vindo/a a Pokemon - Matriz Version! *=====\n\n=> Simbolos do Jogo:\n* - Posicao do Jogador\nX - Perigo\nP - Pokestop\n1~6 - Pokemons\n- - Espaco ja Passado\n\n");
     sleep(5);
@@ -39,7 +39,8 @@ int main () {
     }
     printf("Done!\n\n");
     sleep(2);
-    // .*/
+    // .
+*/
 
     // Coleta de dados do arquivo : matriz/mapa - variavel, jogadores - lista
     int map[tam][tam], mapSave[tam][tam];
@@ -65,12 +66,12 @@ int main () {
     // repeticao do jogo
     while (inGame <= numPlayers) {
         // imprime saudacao inicial ao jogador atual e armazena informacoes dele
-        //imprimeInicioJogo(*listaTrainer, atualPlayer);
+    //    imprimeInicioJogo(*listaTrainer, atualPlayer);
         criaListaPosicoes(listaPos);
         infoJogador(*listaTrainer, atualPlayer, &xPlayer, &yPlayer, &numPBs, *listaPos, Pokedex, &sumScore);
         // .
         // limpa variaveis para nova partida
-        firstPos = 1; atualPlay = 1; pokeCapturados = 0;
+        firstPos = 1; atualPlay = 1; pokeCapturados = 0; contPassos = 0;
         for (i = 0; i < tam; i++) {
             for (j = 0; j < tam; j++) {
                 map[i][j] = mapSave[i][j];
@@ -80,25 +81,23 @@ int main () {
             Pokedex[i] = 0;
         }
         //.
-
-
         // joga enquanto nao acaba partida do jogador atual : explora, anda, desenha mapa e exibe informacoes
         while (atualPlay) {
             explore(tam, *map, xPlayer, yPlayer, &nx, &ny, numPBs, &action, &perigo, firstPos, Pokedex, &sumScore); //explora
-            walk(tam, *map, &xPlayer, &yPlayer, nx, ny, action, &numPBs, &atualPlay, listaPos, &pokeCapturados); //anda
+            walk(tam, *map, &xPlayer, &yPlayer, nx, ny, action, &numPBs, &atualPlay, listaPos, &pokeCapturados, &contPassos); //anda
             // confere se partida ja acabou. se nao, imprime informacoes
             if (atualPlay != 0) {
                 desenhaMapa(tam, *map, xPlayer, yPlayer);
                 printf("Pontuacao: %d\nNumero de Pokebolas: %d | Numero de Pokemons Capturados: %d\n", sumScore, numPBs, pokeCapturados);
-                sleep(2);
-                system("clear");
+        //        sleep(2);
+        //        system("clear");
             }
             // .
             firstPos++;
         }
         // .
-        //printf("*** Fim da Partida do Jogador %d! ***\nPontuacao Final: %d\n\n", atualPlayer, sumScore);
-        attJogador(*listaTrainer, atualPlayer, xPlayer, yPlayer, numPBs, *listaPos, Pokedex, sumScore); // atualiza lista do jogador atual
+        printf("*** Fim da Partida do Jogador %d! ***\nPontuacao Final: %d\n\n", atualPlayer+1, sumScore);
+        attJogador(*listaTrainer, atualPlayer, xPlayer, yPlayer, numPBs, *listaPos, Pokedex, sumScore, contPassos); // atualiza lista do jogador atual
         sleep(3);
 
         // retorno de todas as informacoes para o arquivo
@@ -112,7 +111,7 @@ int main () {
 
     }
     // .
-    declaraVencedor(*listaTrainer, numPlayers);
+    declaraVencedor(*listaTrainer, numPlayers, saida);
     fclose(saida);
     return 0;
 }
